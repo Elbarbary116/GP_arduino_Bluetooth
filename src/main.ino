@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "ultrasonic.h"
 /********************** Joystick ***************/
 JoystickDirection dir;
 int joystic_x_value, joystic_y_value;
@@ -7,7 +7,7 @@ int counter;
 
 /********************** Ultrasonic ***************/
 Ultrasonic front_ultrasonic(7, 6); //trig-> 7,  echo-> 6
-Ultrasonic back_utrasonic(9, 8);  //trig-> 9,  echo-> 8
+Ultrasonic back_ultrasonic(9, 8);  //trig-> 9,  echo-> 8
  int back_dist, front_dist;
 
 /********************** Main application mode ***************/
@@ -152,7 +152,7 @@ void loop() {
   // ###############################################
 
   front_dist = front_ultrasonic.get_distance();
-  back_dist = back_utrasonic.get_distance();
+  back_dist = back_ultrasonic.get_distance();
 
 
 
@@ -225,7 +225,7 @@ void loop() {
   else if(main_mode == CONTROL_BY_VOICE){
 
     rec = voice_module_recognize();
-
+    // Serial.println(rec);
     switch(rec){
       case FORWARD:
       forward(512, 0);
@@ -449,7 +449,7 @@ void log_ultrasonic_info(){
 
 
   Serial.print("back distance: ");
-  Serial.println(back_utrasonic.get_distance());
+  Serial.println(back_ultrasonic.get_distance());
 }
 
 

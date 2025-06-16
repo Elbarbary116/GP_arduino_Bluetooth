@@ -12,7 +12,7 @@ bluetooth_mode_t bt_mode = BT_REMOTE_CONTROL;
 // Flag to track if robot is currently moving
 bool isMoving = false;
 
-extern Ultrasonic front_utrasonic, back_utrasonic;
+extern Ultrasonic front_ultrasonic, back_ultrasonic;
 
 // Use Serial1 for Bluetooth
 #define bluetoothSerial Serial1
@@ -175,12 +175,12 @@ void process_voice_command(char command) {
 void check_obstacles_while_moving() {
   if (isMoving) {
     // Update distance readings
-    front_dist = front_utrasonic.get_distance();
-    Serial.print("Front distance: "); 
-    Serial.println(front_dist);
-    back_dist = back_utrasonic.get_distance();
-    Serial.print("Back distance: ");
-    Serial.println(back_dist);
+    front_dist = front_ultrasonic.get_distance();
+    // Serial.print("Front distance: "); 
+    // Serial.println(front_dist);
+    // back_dist = back_ultrasonic.get_distance();
+    // Serial.print("Back distance: ");
+    // Serial.println(back_dist);
     // Check for obstacles based on current direction
     if (motor_is_moving_forward() && front_dist <= MINIMUM_ACCEPTED_DISTANCE) {
       ROBOT_STOP();
