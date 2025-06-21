@@ -14,6 +14,11 @@
 // for both altrasonic
 #define MINIMUM_ACCEPTED_DISTANCE     30
 
+// Relay Module Pin Definitions
+#define RELAY1_PIN1     14  // Motor 1 control pin 1
+#define RELAY1_PIN2     15  // Motor 1 control pin 2
+#define RELAY2_PIN1     16  // Motor 2 control pin 1
+#define RELAY2_PIN2     17  // Motor 2 control pin 2
 
 typedef enum{
   CONTROL_BY_JOYSTICK,

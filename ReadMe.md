@@ -2,19 +2,32 @@
 
 ## Overview
 
-This document provides a comprehensive overview of the robot control system implemented in the Arduino-based robot. The system allows for controlling the robot's movement using either a joystick or voice commands, with safety features to prevent collisions.
+This document provides a comprehensive overview of the robot control system implemented in the Arduino-based robot. The system allows for controlling the robot's movement using either a joystick, voice commands, or Bluetooth, with safety features to prevent collisions.
 
 ## System Components
 
 ### Hardware Components
 - **Motors**: Two motors controlled through a 2-channel relay module
+- **Relay Module**: 2-channel relay module for controlling the motors
 - **Joystick**: Provides analog X and Y values for directional control
-- **Ultrasonic Sensors**: Front and back sensors for obstacle detection
 - **Voice Recognition Module**: Enables voice command control
+- **Bluetooth Module**: Enables remote control via Bluetooth
+
+### Relay Module Connection
+The 2-channel relay module is connected to the Arduino Mega 2560 as follows:
+- **Motor 1**: 
+  - Forward: RELAY1_PIN1 (Pin 14) HIGH, RELAY1_PIN2 (Pin 15) LOW
+  - Backward: RELAY1_PIN1 (Pin 14) LOW, RELAY1_PIN2 (Pin 15) HIGH
+  - Stop: Both pins LOW
+- **Motor 2**: 
+  - Forward: RELAY2_PIN1 (Pin 16) HIGH, RELAY2_PIN2 (Pin 17) LOW
+  - Backward: RELAY2_PIN1 (Pin 16) LOW, RELAY2_PIN2 (Pin 17) HIGH
+  - Stop: Both pins LOW
 
 ### Control Modes
-1. **Joystick Control Mode**: Default mode where the robot is controlled via joystick movements
-2. **Voice Control Mode**: Alternative mode where the robot responds to voice commands
+1. **Joystick Control Mode**: Mode where the robot is controlled via joystick movements
+2. **Voice Control Mode**: Mode where the robot responds to voice commands
+3. **Bluetooth Control Mode**: Mode where the robot is controlled via Bluetooth commands
 
 ## Movement Control System
 
