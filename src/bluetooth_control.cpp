@@ -12,7 +12,7 @@ bluetooth_mode_t bt_mode = BT_REMOTE_CONTROL;
 // Flag to track if robot is currently moving
 bool isMoving = false;
 
-extern Ultrasonic front_ultrasonic, back_ultrasonic;
+// extern Ultrasonic front_ultrasonic, back_ultrasonic;
 
 // Use Serial1 for Bluetooth
 #define bluetoothSerial Serial1
@@ -58,49 +58,32 @@ bool process_bluetooth_commands() {
 void process_remote_command(char command) {
   switch (command) {
     case 'F': // Forward
-      // Check if path is clear before moving forward
-      if (front_dist > MINIMUM_ACCEPTED_DISTANCE) {
-        ROBOT_FORWARD();
-        isMoving = true;
-        Serial.println("Moving forward via Bluetooth");
-      } else {
-        ROBOT_STOP();
-        Serial.println("Obstacle ahead, cannot move forward");
-      }
+      ROBOT_FORWARD();
+      isMoving = true;
+      Serial.println("Moving forward via Bluetooth");
       break;
-      
     case 'B': // Backward
-      // Check if path is clear before moving backward
-      if (back_dist > MINIMUM_ACCEPTED_DISTANCE) {
-        ROBOT_BACKWARD();
-        isMoving = true;
-        Serial.println("Moving backward via Bluetooth");
-      } else {
-        ROBOT_STOP();
-        Serial.println("Obstacle behind, cannot move backward");
-      }
+      ROBOT_BACKWARD();
+      isMoving = true;
+      Serial.println("Moving backward via Bluetooth");
       break;
-      
     case 'L': // Left
       ROBOT_LEFT();
       delay(500); // Turn for a short time
       ROBOT_STOP();
       Serial.println("Turned left via Bluetooth");
       break;
-      
     case 'R': // Right
       ROBOT_RIGHT();
       delay(500); // Turn for a short time
       ROBOT_STOP();
       Serial.println("Turned right via Bluetooth");
       break;
-      
     case 'S': // Stop
       ROBOT_STOP();
       isMoving = false;
       Serial.println("Stopped via Bluetooth");
       break;
-      
     default:
       // Unknown command, do nothing
       break;
@@ -165,32 +148,6 @@ void process_voice_command(char command) {
     default:
       // Unknown command, do nothing
       break;
-  }
-}
-
-/**
- * Check for obstacles while moving and stop if necessary
- * Call this function repeatedly in the main loop when robot is moving
- */
-void check_obstacles_while_moving() {
-  if (isMoving) {
-    // Update distance readings
-    front_dist = front_ultrasonic.get_distance();
-    // Serial.print("Front distance: "); 
-    // Serial.println(front_dist);
-    // back_dist = back_ultrasonic.get_distance();
-    // Serial.print("Back distance: ");
-    // Serial.println(back_dist);
-    // Check for obstacles based on current direction
-    if (motor_is_moving_forward() && front_dist <= MINIMUM_ACCEPTED_DISTANCE) {
-      ROBOT_STOP();
-      isMoving = false;
-      Serial.println("Obstacle detected ahead! Stopping.");
-    } else if (motor_is_moving_backward() && back_dist <= MINIMUM_ACCEPTED_DISTANCE) {
-      ROBOT_STOP();
-      isMoving = false;
-      Serial.println("Obstacle detected behind! Stopping.");
-    }
   }
 }
 

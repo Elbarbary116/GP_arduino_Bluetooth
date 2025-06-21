@@ -7,7 +7,6 @@
 
 
 #include "joystick.h"
-#include "ultrasonic.h"
 #include "VoiceRecognitionV3.h"
 #include "voice_module.h"
 #include "led.h"
@@ -23,7 +22,6 @@ typedef enum{
 }mode_t;
 
 // 
- extern int back_dist, front_dist;
 
 
 // Bluetooth control function declarations
@@ -31,7 +29,7 @@ void bluetooth_init();
 bool process_bluetooth_commands();
 void process_remote_command(char command);
 void process_voice_command(char command);
-void check_obstacles_while_moving();
+// void check_obstacles_while_moving();
 bool motor_is_moving_forward();
 bool motor_is_moving_backward();
 

@@ -1,21 +1,23 @@
+#include <Arduino.h>
 #include "main.h"
-#include "ultrasonic.h"
 /********************** Joystick ***************/
 JoystickDirection dir;
 int joystic_x_value, joystic_y_value;
 int counter;
 
 /********************** Ultrasonic ***************/
-Ultrasonic front_ultrasonic(7, 6); //trig-> 7,  echo-> 6
-Ultrasonic back_ultrasonic(9, 8);  //trig-> 9,  echo-> 8
- int back_dist, front_dist;
+// Ultrasonic front_ultrasonic(7, 6); //trig-> 7,  echo-> 6
+// Ultrasonic back_ultrasonic(9, 8);  //trig-> 9,  echo-> 8
+// int back_dist, front_dist;
 
 /********************** Main application mode ***************/
 mode_t main_mode = CONTROL_BY_BLUETOOTH; // start with that mode
 
 
 /********************** Leds ***************/
-Led led_forward(14), led_backward(15), led_left(16), led_right(17);
+// Led led_forward(14), led_backward(15), led_left(16), led_right(17);
+
+
 
 
 /********************** Voice module ***************/
@@ -90,7 +92,17 @@ void ROBOT_STOP(){
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  pinMode(14, OUTPUT);
+  pinMode(15, OUTPUT);
+  pinMode(16, OUTPUT);
+  pinMode(17, OUTPUT);
+// initialize the motor pins low
+  digitalWrite(14, LOW);
+  digitalWrite(15, LOW);
+  digitalWrite(16, LOW);
+  digitalWrite(17, LOW);
 
+  // Initialize joystick
   joystick_init();
 
   if (voice_module_init() == ES_OK){
@@ -143,16 +155,6 @@ void loop() {
       delay(10);
     }
   }
-
-
-
-  // ###############################################
-  // ###############################################
-  // #########    red the ultrasonic    ############
-  // ###############################################
-
-  front_dist = front_ultrasonic.get_distance();
-  back_dist = back_ultrasonic.get_distance();
 
 
 
@@ -259,12 +261,11 @@ void loop() {
     // Serial.println("bluetooth mode on");
     
     // Continuously check for obstacles while moving
-    check_obstacles_while_moving();
+    // check_obstacles_while_moving();
   } 
 
   //dir = joystick_get_direction();
   //log_joystick_info();
-  //log_ultrasonic_info();
   //log_voice_module_info();
 
   //delay(100);
@@ -280,140 +281,54 @@ void stop() {
 }
 
 void forward(int x_val, int y_val) {
-
-  if (front_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.on();
-    // led_backward.off();
-    // led_left.off();
-    // led_right.off();
-    ROBOT_FORWARD();
-  } else {
-    stop();
-  }
-  
+  ROBOT_FORWARD();
   (void)x_val;
   (void)y_val;
 }
 
 void forward_left(int x_val, int y_val) {
-
-  if (front_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.on();
-    // led_backward.off();
-    // led_left.on();
-    // led_right.off();
-    
-    // Calculate how far the joystick is from center in each direction
-    int x_distance_from_center = abs(x_val - 512);
-    int y_distance_from_center = abs(y_val - 512);
-    
-    // Compare the distances to determine which direction is stronger
-    if (y_distance_from_center > x_distance_from_center) {
-      // Y-axis movement is stronger - go forward
-      ROBOT_FORWARD();
-    } else {
-      // X-axis movement is stronger - go left
-      ROBOT_LEFT();
-    }
-   
+  int x_distance_from_center = abs(x_val - 512);
+  int y_distance_from_center = abs(y_val - 512);
+  if (y_distance_from_center > x_distance_from_center) {
+    ROBOT_FORWARD();
   } else {
-    stop();
+    ROBOT_LEFT();
   }
 }
-
 
 void forward_right(int x_val, int y_val) {
-
-  if (front_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.on();
-    // led_backward.off();
-    // led_left.off();
-    // led_right.on();
-    
-    // Calculate how far the joystick is from center in each direction
-    int x_distance_from_center = abs(x_val - 512);
-    int y_distance_from_center = abs(y_val - 512);
-    
-    // Compare the distances to determine which direction is stronger
-    if (y_distance_from_center > x_distance_from_center) {
-      // Y-axis movement is stronger - go forward
-      ROBOT_FORWARD();
-    } else {
-      // X-axis movement is stronger - go right
-      ROBOT_RIGHT();
-    }
-    
+  int x_distance_from_center = abs(x_val - 512);
+  int y_distance_from_center = abs(y_val - 512);
+  if (y_distance_from_center > x_distance_from_center) {
+    ROBOT_FORWARD();
   } else {
-    stop();
+    ROBOT_RIGHT();
   }
 }
 
-
 void backward(int x_val, int y_val) {
-
-  if (back_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.off();
-    // led_backward.on();
-    // led_left.off();
-    // led_right.off();
-    ROBOT_BACKWARD();
-    
-  } else {
-    stop();
-  }
-
+  ROBOT_BACKWARD();
   (void)x_val;
   (void)y_val;
 }
 
 void backward_left(int x_val, int y_val) {
-
-  if (back_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.off();
-    // led_backward.on();
-    // led_left.on();
-    // led_right.off();
-    
-    // Calculate how far the joystick is from center in each direction
-    int x_distance_from_center = abs(x_val - 512);
-    int y_distance_from_center = abs(y_val - 512);
-    
-    // Compare the distances to determine which direction is stronger
-    if (y_distance_from_center > x_distance_from_center) {
-      // Y-axis movement is stronger - go backward
-      ROBOT_BACKWARD();
-    } else {
-      // X-axis movement is stronger - go left
-      ROBOT_LEFT();
-    }
-   
+  int x_distance_from_center = abs(x_val - 512);
+  int y_distance_from_center = abs(y_val - 512);
+  if (y_distance_from_center > x_distance_from_center) {
+    ROBOT_BACKWARD();
   } else {
-    stop();
+    ROBOT_LEFT();
   }
 }
 
 void backward_right(int x_val, int y_val) {
-
-  if (back_dist > MINIMUM_ACCEPTED_DISTANCE) {
-    // led_forward.off();
-    // led_backward.on();
-    // led_left.off();
-    // led_right.on();
-    
-    // Calculate how far the joystick is from center in each direction
-    int x_distance_from_center = abs(x_val - 512);
-    int y_distance_from_center = abs(y_val - 512);
-    
-    // Compare the distances to determine which direction is stronger
-    if (y_distance_from_center > x_distance_from_center) {
-      // Y-axis movement is stronger - go backward
-      ROBOT_BACKWARD();
-    } else {
-      // X-axis movement is stronger - go right
-      ROBOT_RIGHT();
-    }
+  int x_distance_from_center = abs(x_val - 512);
+  int y_distance_from_center = abs(y_val - 512);
+  if (y_distance_from_center > x_distance_from_center) {
+    ROBOT_BACKWARD();
   } else {
-    stop();
+    ROBOT_RIGHT();
   }
 }
 
@@ -441,17 +356,6 @@ void right(int x_val, int y_val) {
   (void)x_val;
   (void)y_val;
 }
-
-
-void log_ultrasonic_info(){
-  Serial.print("front distance: ");
-  Serial.println(front_ultrasonic.get_distance());
-
-
-  Serial.print("back distance: ");
-  Serial.println(back_ultrasonic.get_distance());
-}
-
 
 
 void log_joystick_info() {
